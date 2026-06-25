@@ -1,10 +1,28 @@
-# TrustGate for AI Agents
+# TrustGate
 
-TrustGate is a runtime gate I built between a Gemini agent and a refund action. The agent proposes the action; TrustGate checks live Fivetran evidence, a local input contract, and a deterministic policy before returning `ALLOW`, `APPROVAL_REQUIRED`, or `BLOCK`.
+Runtime authorization for AI agents that checks the data supply chain before a high-impact action executes.
 
-This repo is intentionally scoped as a hackathon proof, not a production platform claim. The part I care about proving is the loop:
+Agent governance tools answer one question: *is this agent allowed to call this tool?* They check identity, match it against a policy, and permit or deny the call. Microsoft's Agent Governance Toolkit, Amazon Bedrock AgentCore Policy, and the MCP specification all do this. It is a necessary control.
 
-I am keeping the build log, demo script, and setup notes public so judges and other builders can reproduce the flow instead of only watching the video.
+There is a second question none of them answer: *should this agent act, given the current state of the data behind the decision?*
+
+These are not the same question. An agent can be fully authorized to call `approve_refund` — right identity, right policy — and still cause damage because the Fivetran sync behind the decision is stale, a new `customer_tier` enum appeared that the input contract never authorized, or the BigQuery row the agent is reading is 42 minutes old when the SLA requires freshness within 15. In each case, the authorization check passes. The damage still happens.
+
+## Why data supply chain trust
+
+AI agents are being deployed into production systems where the data they act on is not static. It comes from syncs, pipelines, and APIs. It has freshness windows. It has schemas that evolve. A governance layer that only checks agent identity and tool permission is built for a world where the data is always correct, always fresh, and always matches the contract the policy was written against.
+
+That world does not exist in production.
+
+TrustGate sits between the agent and the action. Before `approve_refund` executes, it checks live Fivetran evidence, a BigQuery row from the Fivetran-synced table, and a versioned input contract. The policy engine returns `ALLOW`, `APPROVAL_REQUIRED`, or `BLOCK` with a full evidence receipt. The model proposes. The policy engine decides.
+
+The three checks are deterministic, not probabilistic:
+
+- **Freshness** — is the data behind this decision newer than the SLA requires?
+- **Schema compliance** — does the data match the shape the policy was written against? A new enum value the contract never authorized means the policy was not written for this case.
+- **Connection validity** — is the data source reachable and reporting a successful sync? A schema failure or dropped connection becomes a hard BLOCK, not a silent pass.
+
+This repo is scoped as a hackathon proof. The build log, demo script, and setup notes are public so the flow can be reproduced rather than only watched.
 
 ```text
 Gemini / Vertex AI function call

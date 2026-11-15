@@ -4,7 +4,7 @@ info:
   version: 0.1.0
   description: Single-operation tool spec for Gemini/Agent Builder imports when available. The agent proposes a business action; TrustGate returns ALLOW, APPROVAL_REQUIRED, or BLOCK with evidence.
 servers:
-  - url: https://trustgate-24801890031.us-central1.run.app
+  - url: http://localhost:8080
 paths:
   /api/actions/propose:
     post:

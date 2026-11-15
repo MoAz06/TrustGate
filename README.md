@@ -67,7 +67,8 @@ The Gemini agent only calls TrustGate's own `/mcp` surface. TrustGate's backend 
 
 ## Current Proof
 
-- Hosted app/API: `https://trustgate-24801890031.us-central1.run.app`
+The Cloud Run deployment ran during the hackathon and has since been retired, so the paths below are relative to wherever you run it. The recorded walkthrough shows the whole loop against the live deployment: https://www.youtube.com/watch?v=IeTSkqudJBY
+
 - Gemini agent endpoint: `POST /api/agent/run`
 - Action endpoint: `POST /api/actions/propose`
 - MCP tool endpoint for Agent Builder `Add tools -> MCP Server`: `POST /mcp` (TrustGate's own MCP surface, not Fivetran's MCP)
@@ -76,7 +77,7 @@ The Gemini agent only calls TrustGate's own `/mcp` surface. TrustGate's backend 
 - Live Fivetran MCP evidence (official Fivetran MCP server at runtime): `source=fivetran_mcp_live` via `/api/fivetran/mcp-evidence`
 - Live BigQuery evidence observed in hosted receipts: `source=bigquery_rest_live`
 - Fivetran connection used in the demo: `fulfill_pageant`
-- Working Gemini paths: hosted `/api/agent/run` and `scripts/vertex_trustgate_agent_demo.py`
+- Working Gemini paths: `/api/agent/run` and `scripts/vertex_trustgate_agent_demo.py`
 - Build notes with the things that broke: `BUILD_LOG.md`
 - Exact video flow: `DEMO_SCRIPT.md`
 
@@ -95,7 +96,7 @@ Gemini explains the receipt. Gemini does not decide the policy.
 
 ## Dashboard
 
-Opening the hosted URL (or `localhost:8080`) loads an interactive control-room dashboard, not just an API. From the Action Console you set a refund amount and run the agent or the policy. Each decision renders as:
+Opening `localhost:8080` loads an interactive control-room dashboard, not just an API. From the Action Console you set a refund amount and run the agent or the policy. Each decision renders as:
 
 - a colour-coded decision banner (green `ALLOW`, amber `APPROVAL_REQUIRED`, red `BLOCK`) with the one-line reason and the receipt id,
 - an evidence trace, Agent -> Fivetran -> BigQuery -> Policy, with the live source at each step,
@@ -160,7 +161,7 @@ The important proof is the real Fivetran field inside the action receipt.
 TrustGate also calls the official Fivetran MCP server (`github.com/fivetran/fivetran-mcp`) at runtime. The Cloud Run container installs that server, and the TrustGate backend spawns it over stdio and calls `list_connections` and `get_connection_details` to gather Fivetran evidence. Each action receipt includes an `evidence.fivetran_mcp` block, and there is a dedicated endpoint:
 
 ```bash
-curl https://trustgate-24801890031.us-central1.run.app/api/fivetran/mcp-evidence
+curl http://localhost:8080/api/fivetran/mcp-evidence
 ```
 
 A healthy response shows `source: fivetran_mcp_live`, `details_verified: true`, and `target_connection_present: true` for `fulfill_pageant`.

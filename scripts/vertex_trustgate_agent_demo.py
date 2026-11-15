@@ -1,4 +1,5 @@
 import json
+import os
 import urllib.request
 
 import vertexai
@@ -8,7 +9,8 @@ from vertexai.generative_models import FunctionDeclaration, GenerativeModel, Par
 PROJECT_ID = "trustgate-hackathon"
 LOCATION = "us-central1"
 MODEL_NAME = "gemini-3.5-flash"
-TRUSTGATE_URL = "https://trustgate-24801890031.us-central1.run.app/api/actions/propose"
+TRUSTGATE_BASE = os.environ.get("TRUSTGATE_BASE", "http://localhost:8080")
+TRUSTGATE_URL = f"{TRUSTGATE_BASE}/api/actions/propose"
 
 
 SYSTEM_INSTRUCTION = """

@@ -2,6 +2,8 @@
 
 TrustGate can add live BigQuery row evidence to each action receipt. This is the part that proves the policy decision is reading from the Fivetran-synced table, not only from local demo state.
 
+> The Cloud Run deployment referred to below was retired after the hackathon and no longer responds. The URLs shown are the ones that ran at the time. Substitute your own deployment, or `http://localhost:8080` when running locally.
+
 ## Expected Table
 
 Default table:

@@ -210,7 +210,7 @@ This endpoint speaks the MCP streamable-HTTP JSON-RPC protocol and exposes one t
 
 To be precise about what this is: `/mcp` is TrustGate's own MCP tool surface for agents. It is not Fivetran's MCP server. Separately, the TrustGate backend spawns the official Fivetran MCP server over stdio and adds that result to receipts as `evidence.fivetran_mcp`.
 
-The hosted app also has a visible Gemini run endpoint:
+The app also has a visible Gemini run endpoint:
 
 ```text
 POST /api/agent/run

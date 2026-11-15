@@ -1,6 +1,8 @@
 # Cloud Run + Gemini tool setup
 
-This file records the Cloud Run deployment path and the agent-tool paths I tried. The deployed API works. The video proof should show the Agent Designer MCP Server path to TrustGate's `/mcp` endpoint. The hosted Vertex AI function-calling route remains a dashboard/backup proof path, documented in `docs/vertex-agent-function-calling.md`.
+This file records the Cloud Run deployment path and the agent-tool paths I tried. The deployed API worked throughout the hackathon. The video proof should show the Agent Designer MCP Server path to TrustGate's `/mcp` endpoint. The hosted Vertex AI function-calling route remains a dashboard/backup proof path, documented in `docs/vertex-agent-function-calling.md`.
+
+> The Cloud Run deployment referred to below was retired after the hackathon and no longer responds. The URLs shown are the ones that ran at the time. Substitute your own deployment, or `http://localhost:8080` when running locally.
 
 ## Current known values
 
